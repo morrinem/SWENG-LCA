@@ -17,16 +17,16 @@ public class testLCA {
     @Test
     void regularCase()
     {
-        Node a = new Node(1, null, null);
-        Node b = new Node(2, a, null);
-        Node c = new Node(3, null, null);
-        Node d = new Node(4, b, c);
-        Node e = new Node(5, null, null);
-        Node f = new Node(6, null, null);
-        Node g = new Node(7, e, f);
-        Node h = new Node(8, null, null);
-        Node i = new Node(9, g, h);
-        Node j = new Node(10, d, i);
+        Node a = new Node(1, {null});
+        Node b = new Node(2, {a, null});
+        Node c = new Node(3, {null});
+        Node d = new Node(4, {b, c});
+        Node e = new Node(5, {null});
+        Node f = new Node(6, {null});
+        Node g = new Node(7, {e, f});
+        Node h = new Node(8, {null});
+        Node i = new Node(9, {g, h});
+        Node j = new Node(10, {d, i});
         //j is the root node
         /*
         10
@@ -51,16 +51,16 @@ public class testLCA {
     @Test
     void mixedTypes()
     {
-        Node a = new Node(1, null, null);
-        Node b = new Node('b', a, null);
-        Node c = new Node("three", null, null);
-        Node d = new Node(4, b, c);
-        Node e = new Node(new Node(5, null, null), null, null);
-        Node f = new Node(null, null, null);
-        Node g = new Node(true, e, f);
-        Node h = new Node(false, null, null);
-        Node i = new Node("nine", g, h);
-        Node j = new Node(10.0, d, i);
+        Node a = new Node(1, {null});
+        Node b = new Node('b', {a});
+        Node c = new Node("three", {null});
+        Node d = new Node(4, {b, c});
+        Node e = new Node(new Node(5, {null}), {null});
+        Node f = new Node(null, {null});
+        Node g = new Node(true, {e, f});
+        Node h = new Node(false, {null});
+        Node i = new Node("nine", {g, h});
+        Node j = new Node(10.0, {d, i});
         //same tree as before, with new 'names' or data
         Node ans1 = LCA.findLCA(j, a, e);
         Node ans2 = LCA.findLCA(j, a, b);
@@ -71,5 +71,23 @@ public class testLCA {
         assertEquals(ans2.data, 'b');
         assertEquals(ans3.data, true);
         assertEquals(ans4.data, "nine");
+    }
+
+    @Test
+    void dagTests()
+    {
+        Node e = new Node('e', {null});
+        Node d = new Node('d', {e});
+        Node b = new Node('b', {d});
+        Node c = new Node('c', {d,e});
+        Node a = new Node('a', {b, d, c, e});
+
+        Node ans1 = LCA.findLCA(a, e, d);
+        Node ans2 = LCA.findLCA(a, b, c);
+        Node ans3 = LCA.findLCA(a, e, b);
+
+        assertEquals(ans1.data, 'd');
+        assertEquals(ans2.data, 'a');
+        assertEquals(ans3.data, 'b');
     }
 }
